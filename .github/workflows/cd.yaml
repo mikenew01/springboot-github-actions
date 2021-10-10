@@ -106,7 +106,7 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "Github Actions"
-          git config -am "Update k8s kustomize"
+          git commit -am "Update k8s kustomize"
 
       - name: push-k8
         uses: ad-m/github-push-action@master
