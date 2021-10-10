@@ -93,7 +93,7 @@
         <repository>
             <id>github</id>
             <name>GitHub MaikonCanuto Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Maikoncanuto/springboot-github-actions</url>
+            <url>https://token:${token}@maven.pkg.github.com/Maikoncanuto/springboot-github-actions</url>
         </repository>
     </distributionManagement>
 
