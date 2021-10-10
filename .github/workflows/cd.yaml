@@ -76,6 +76,41 @@ jobs:
       - name: push-version-release
         uses: ad-m/github-push-action@master
 
+  publish-package:
+    name: publish-package
+    runs-on: ubuntu-latest
+    needs: [ release ]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: update-checkout
+        run: |
+          git pull
+
+      - name: setup-jdk
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: build-cache-maven
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: build-maven
+        run: mvn -T 1C install
+
+      - name: publish
+        run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
   create-image-docker:
     name: create-image-docker
     runs-on: ubuntu-latest
