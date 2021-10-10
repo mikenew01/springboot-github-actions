@@ -1,0 +1,20 @@
+name: cd
+
+on:
+  push:
+    branches: [ main ]
+  jobs:
+    build:
+      name: Build
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout
+          uses: actions/checkout@v2
+
+        - name: build image
+          uses: docker/build-push-action@v1.1.0
+          with:
+            username: maikoncanuto
+            password: ${{secrets.DOCKER_PASSWORD}}
+            repository: maikoncanuto/springboot-github-actions
+            tags: ${{github.sha}}, latest
