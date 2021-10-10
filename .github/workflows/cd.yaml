@@ -30,8 +30,18 @@ jobs:
       - name: build-maven
         run: mvn -T 1C -B package --file pom.xml
 
-      - name: coverage
-        uses: codecov/codecov-action@v1
+  coverage:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - run: mvn -T 1C -B verify --no-transfer-progress
+
+      - uses: codecov/codecov-action@v1
         with:
           file: ./**/target/site/jacoco/jacoco.xml
           name: codecov
