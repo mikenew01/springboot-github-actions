@@ -31,7 +31,7 @@ jobs:
         run: mvn -T 1C -B package --file pom.xml
 
   coverage:
-    needs: [ build ]
+    needs: [ build-and-test ]
     runs-on: ubuntu-latest
 
     steps:
