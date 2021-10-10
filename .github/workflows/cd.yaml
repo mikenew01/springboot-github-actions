@@ -64,6 +64,9 @@ jobs:
           git commit -am "Update version maven"
           mvn versions:commit
 
+      - name: push-version-release
+        uses: ad-m/github-push-action@master
+
   create-image-docker:
     name: create-image-docker
     runs-on: ubuntu-latest
