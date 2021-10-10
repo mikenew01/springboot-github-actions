@@ -103,8 +103,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: build-maven
-        run: mvn -T 1C install
+      - name: setup-maven-settings
+        uses: s4u/maven-settings-action@v1
+        with:
+          servers: '[{"id": "github", "username": "x-access-token", "password": "${GITHUB_TOKEN}"}]'
 
       - name: publish
         run: mvn --batch-mode deploy
