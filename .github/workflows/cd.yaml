@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - run: mvn -B verify -P coverage --no-transfer-progress
 
       - name: build-cache-maven
         uses: actions/cache@v1
@@ -84,6 +83,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+
+      - name: update-checkout
+        run: |
+          git pull
 
       - name: build-image-docker
         uses: docker/build-push-action@v1.1.0
