@@ -19,6 +19,13 @@ jobs:
         with:
           java-version: 11
 
+      - name: build-cache-maven
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
       - name: build-maven
         run: mvn -T 1C -B package --file pom.xml
 
@@ -35,16 +42,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          tag_name: v${{github.run_number}}
-          release_name: Release v${{github.run_number}} - sha:${{github.sha}}
+          tag_name: ${{github.run_number}}-${{github-sha}}
+          release_name: Release ${{github.run_number}}-${{github-sha}}
 
       - name: update-version-release-maven
-        run: mvn -T 1C -B versions:set -DnewVersion=${{github.run_number}} -DgenerateBackupPoms=false
+        run: mvn -T 1C -B versions:set -DnewVersion=${{github.run_number}}-${{github-sha}} -DgenerateBackupPoms=false
 
-      - name: publish-version-maven-github
-        run: mvn -T 1C -B deploy -DskipTests --file pom.xml
-        env:
-          GITHUB_TOKEN: ${{github.token}}
+      - name: update-version-configure-git
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "Github Actions"
+          git commit -am "Update version maven"
 
   create-image-docker:
     name: create-image-docker
