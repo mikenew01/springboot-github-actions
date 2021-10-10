@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.maikoncanuto</groupId>
     <artifactId>springboot-github-actions</artifactId>
-    <version>24.9c80b4ec7c4de33b25396c7bc76187bf104afa58</version>
+    <version>25.b0436c985a1223eb14622cd0961092e41b6c98c6</version>
     <name>springboot-github-actions</name>
 
     <properties>
