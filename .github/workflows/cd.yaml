@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - run: mvn -B verify -P coverage --no-transfer-progress
 
       - name: build-cache-maven
         uses: actions/cache@v1
@@ -28,6 +29,12 @@ jobs:
 
       - name: build-maven
         run: mvn -T 1C -B package --file pom.xml
+
+      - name: coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./**/target/site/jacoco/jacoco.xml
+          name: codecov
 
   release:
     name: release
@@ -42,17 +49,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          tag_name: ${{github.run_number}}-${{github.sha}}
-          release_name: Release ${{github.run_number}}-${{github.sha}}
+          tag_name: ${{github.run_number}}.${{github.sha}}
+          release_name: Release - ${{github.run_number}}.${{github.sha}}
+          draft: false
+          prerelease: false
 
       - name: update-version-release-maven
-        run: mvn -T 1C -B versions:set -DnewVersion=${{github.run_number}}-${{github.sha}} -DgenerateBackupPoms=false
+        run: mvn -T 1C -B versions:set -DnewVersion=${{github.run_number}}.${{github.sha}} -DgenerateBackupPoms=false
 
       - name: update-version-configure-git
         run: |
           git config user.email "actions@github.com"
           git config user.name "Github Actions"
           git commit -am "Update version maven"
+          mvn versions:commit
 
   create-image-docker:
     name: create-image-docker
@@ -68,4 +78,4 @@ jobs:
           username: maikoncanuto
           password: ${{secrets.DOCKER_PASSWORD}}
           repository: maikoncanuto/springboot-github-actions
-          tags: ${{github.run_number}}, latest
+          tags: ${{github.run_number}}.${{github.sha}}, latest
