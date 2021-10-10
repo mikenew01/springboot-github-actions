@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-github-actions
+spec:
+  selector:
+    matchLabels:
+      app: springboot-github-actions
+  template:
+    metadata:
+      labels:
+        app: springboot-github-actions
+    spec:
+      containers:
+        - name: springboot-github-actions
+          image: springboot-github-actions
+          ports:
+            - containerPort: 8080
