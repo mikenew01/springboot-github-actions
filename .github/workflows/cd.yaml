@@ -104,8 +104,8 @@ jobs:
 
       - name: commit-k8
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "Github Actions"
+          git config user.email "actions@github.com"
+          git config user.name "Github Actions"
           git config -am "Update k8s kustomize"
 
       - name: push-k8
