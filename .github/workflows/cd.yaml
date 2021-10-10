@@ -42,11 +42,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          tag_name: ${{github.run_number}}-${{github-sha}}
-          release_name: Release ${{github.run_number}}-${{github-sha}}
+          tag_name: ${{github.run_number}}-${{github.sha}}
+          release_name: Release ${{github.run_number}}-${{github.sha}}
 
       - name: update-version-release-maven
-        run: mvn -T 1C -B versions:set -DnewVersion=${{github.run_number}}-${{github-sha}} -DgenerateBackupPoms=false
+        run: mvn -T 1C -B versions:set -DnewVersion=${{github.run_number}}-${{github.sha}} -DgenerateBackupPoms=false
 
       - name: update-version-configure-git
         run: |
