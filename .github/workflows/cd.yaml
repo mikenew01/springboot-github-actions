@@ -3,6 +3,9 @@ name: cd
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
   build:
     name: Build
@@ -10,6 +13,14 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+
+      - name: SetUp JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build with maven
+        run: mvn -B package --file pom.xml
 
       - name: build image
         uses: docker/build-push-action@v1.1.0
