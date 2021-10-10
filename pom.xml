@@ -41,6 +41,8 @@
     </dependencies>
 
     <build>
+        <finalName>${project.name}-${project.version}</finalName>
+
         <resources>
             <resource>
                 <filtering>true</filtering>
@@ -90,7 +92,7 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>Releases</name>
+            <name>GitHub MaikonCanuto Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/Maikoncanuto/springboot-github-actions</url>
         </repository>
     </distributionManagement>
