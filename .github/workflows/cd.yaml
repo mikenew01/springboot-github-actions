@@ -8,24 +8,54 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: build
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: SetUp JDK
+      - name: setup-jdk
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
-      - name: Build with maven
+      - name: build-maven
         run: mvn -B package --file pom.xml
 
-      - name: build image
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: v${{github.run_number}}
+          release_name: Release v${{github_run_number}} - sha:${{github.sha}}
+
+      - name: update-version-release-maven
+        run: mvn -B versions:set -DnewVersion=v${{github.run_number}} -DgenerateBackupPoms=false
+
+      - name: publish-version-maven-github
+        run: mvn -B deploy -DskipTests --file pom.xml
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+
+  create-image-docker:
+    name: create-image-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: build-image-docker
         uses: docker/build-push-action@v1.1.0
         with:
           username: maikoncanuto
           password: ${{secrets.DOCKER_PASSWORD}}
           repository: maikoncanuto/springboot-github-actions
-          tags: ${{github.sha}}, latest
+          tags: ${{github.run_number}}, latest
